@@ -1,0 +1,11 @@
+{
+  "unique_fields": ["facility_id"],
+  "rules": [
+    { "kind": "not_null", "fields": ["facility_name", "facility_type"] },
+    { "kind": "in_set", "field": "facility_type",
+      "values": ["clinic", "hospital", "health_post", "pharmacy"] },
+    { "kind": "range", "field": "beds", "min": 0, "max": 500 },
+    { "kind": "regex", "field": "phone", "pattern": "\\+?[0-9\\- ]{7,20}" },
+    { "kind": "min_length", "field": "facility_name", "length": 3 }
+  ]
+}

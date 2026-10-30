@@ -1,0 +1,9 @@
+{
+  "fields": [
+    { "name": "facility_id", "type": "Integer", "nullable": false },
+    { "name": "facility_name", "type": "String", "length": 100, "nullable": false },
+    { "name": "facility_type", "type": "String", "length": 20, "nullable": false },
+    { "name": "beds", "type": "Integer" },
+    { "name": "phone", "type": "String", "length": 20 }
+  ]
+}
