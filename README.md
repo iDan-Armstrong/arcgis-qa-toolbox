@@ -1,6 +1,6 @@
 # arcgis-qa-toolbox — tested QA tools for ArcGIS Pro & Enterprise
 
-![CI](https://github.com/USERNAME/arcgis-qa-toolbox/actions/workflows/ci.yml/badge.svg)
+![CI](https://github.com/iDan-Armstrong/arcgis-qa-toolbox/actions/workflows/ci.yml/badge.svg)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
 An ArcGIS Pro **Python Toolbox** (`.pyt`) and **geoprocessing service** for data QA,
