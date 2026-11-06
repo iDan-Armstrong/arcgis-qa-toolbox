@@ -1,16 +1,25 @@
 # -*- coding: utf-8 -*-
 """QA Toolbox: ArcGIS Pro Python Toolbox wrapping the tested qacore engine.
 
-Install: pip install -e . into the active Pro conda environment (or add src/
-to the Python path), then add this .pyt to a project.
+Install: add this .pyt to a project. It uses the qacore package from ../src
+unless one is installed (pip install -e . into a cloned Pro environment).
 
 The tools stay deliberately thin — parameter plumbing only. All logic lives
 in qacore, where it has unit tests that run in CI without an ArcGIS license.
 """
 
 import json
+import sys
+from pathlib import Path
 
 import arcpy
+
+# Pro's default environment is read-only, so pip install often means cloning it.
+# Without an install, use the qacore package that sits next to this toolbox.
+try:
+    import qacore  # noqa: F401
+except ImportError:
+    sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
 from qacore.arcpy_adapter import describe_fields, iter_records, log_summary, select_failures
 from qacore.rules import Rule, run_rules
