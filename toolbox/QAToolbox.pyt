@@ -102,9 +102,8 @@ class FeatureClassQA:
         parameters[3].value = layer
 
         if fail_on_error and not summary.passed:
-            raise arcpy.ExecuteError(
-                f"QA failed: {len(summary.failing_oids)} of {summary.total} features"
-            )
+            # AddError fails the tool with this message; raising would add a traceback.
+            arcpy.AddError(f"QA failed: {len(summary.failing_oids)} of {summary.total} features")
 
 
 class SchemaCompare:
@@ -161,4 +160,4 @@ class SchemaCompare:
             (arcpy.AddMessage if diff.clean else arcpy.AddWarning)(line)
         parameters[3].value = diff.clean
         if not diff.clean:
-            raise arcpy.ExecuteError("schema drift detected — see messages")
+            arcpy.AddError("Schema drift detected: see the messages above")
