@@ -59,16 +59,22 @@ def describe_fields(fc: str) -> list[FieldSpec]:
 
 
 def select_failures(fc: str, summary: RunSummary, layer_name: str = "qa_failures") -> Any:
-    """Make a layer selecting the failing OIDs, for immediate review in Pro."""
+    """Make a layer of only the failing features, for immediate review in Pro.
+
+    The failing OIDs go in the layer's definition query, not a selection: Pro
+    rebuilds a derived output layer from its data source when it adds it to the
+    map, and a selection does not survive that. The layer is made from the
+    dataset's path, so it never inherits the input layer's own selection or
+    query.
+    """
     import arcpy
 
+    desc = arcpy.Describe(fc)
     oids = sorted(summary.failing_oids)
-    layer = arcpy.management.MakeFeatureLayer(fc, layer_name).getOutput(0)
-    if oids:
-        oid_field = arcpy.Describe(fc).OIDFieldName
-        where = f"{oid_field} IN ({', '.join(map(str, oids))})"
-        arcpy.management.SelectLayerByAttribute(layer, "NEW_SELECTION", where)
-    return layer
+    oid_field = arcpy.AddFieldDelimiters(desc.catalogPath, desc.OIDFieldName)
+    # No failures: an empty layer rather than every feature.
+    where = f"{oid_field} IN ({', '.join(map(str, oids))})" if oids else "1 = 0"
+    return arcpy.management.MakeFeatureLayer(desc.catalogPath, layer_name, where).getOutput(0)
 
 
 def log_summary(summary: RunSummary) -> None:
