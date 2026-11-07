@@ -47,13 +47,25 @@ CI validates its structure (Toolbox class, registered tools, required methods) t
 
 ## Use in ArcGIS Pro
 
-```bash
-# in the Pro conda environment
-pip install -e .
+Add `toolbox/QAToolbox.pyt` in Catalog. It uses the `qacore` package next to it, so
+nothing needs installing into Pro's read-only default environment. (If you work in a
+cloned environment, `pip install -e .` there takes precedence.)
+
+**Feature Class QA** adds a `qa_failures` layer that holds only the failing features
+(the OIDs go in its definition query), and the messages carry the per-rule report.
+**Schema Compare** fails the tool with a plain error when the schema has drifted.
+
+### Try it on demo data
+
+```python
+# in the ArcGIS Pro Python window
+import runpy; runpy.run_path(r"<repo>\examples\make_demo_gdb.py", run_name="__main__")
 ```
 
-Then add `toolbox/QAToolbox.pyt` in Catalog. Failing features come back selected on a
-layer, ready for review; the message log carries the per-rule report.
+This builds `examples/qa_demo.gdb` from the synthetic `demo_facilities.csv`:
+`facilities` has bad records (Feature Class QA fails 12 of 201), and
+`facilities_drifted` has a changed schema (Schema Compare reports three drifts).
+Run against `facilities`, Schema Compare passes.
 
 ## Publish as a geoprocessing service
 
@@ -73,7 +85,7 @@ sign-in — never from arguments or source.
 
 ```bash
 pip install -e ".[dev]"
-pytest        # 25+ tests, no ArcGIS required
+pytest        # 21 tests, no ArcGIS required
 ruff check .
 ```
 
